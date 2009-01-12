@@ -1,6 +1,7 @@
 package aplicacao.lutador;
 
 import aplicacao.interfaces.BuscaItem;
+import controle.observerhub.LutadorObserverHub;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -39,7 +40,7 @@ public class TableModelLutador extends AbstractTableModel implements Observer,
             EquipeDadoIncorretoException {      
         
         this.setlutadores(Lutador.getLutadores());
-        Lutador.addLutadorObserver(this);
+        LutadorObserverHub.getInstance().addObserver(this);
     }    
 
     public TableModelLutador(List lista) {      
