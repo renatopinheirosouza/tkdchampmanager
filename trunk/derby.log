@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-2008-10-16 19:35:10.234 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.2.2.0 - (485682): instance c013800d-011d-0727-85ee-000000240260
-on database directory G:\Java\Sistemas\tkdchampmanager\tkdchampmanagerdb  
+2009-01-12 00:29:26.562 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.2.2.0 - (485682): instance c013800d-011e-c83e-3464-00000027d230
+on database directory D:\pessoal\Desenvolvimento\Java\Sistemas\tkdchampmanager\trunk\tkdchampmanagerdb  
 
 Database Class Loader started - derby.database.classpath=''

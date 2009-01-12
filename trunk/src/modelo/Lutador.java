@@ -1,9 +1,10 @@
 package modelo;
 
+import controle.observerhub.LutadorObserverHub;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
+import java.util.Observable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,13 +15,12 @@ import modelo.excecoes.DAOException;
 import modelo.dao.DAOFactory;
 import modelo.excecoes.EquipeDadoIncorretoException;
 import modelo.excecoes.LutadorDadoIncorretoException;
-import util.StaticObservable;
 
 /**
  * Classe que define o lutador
  */
 @Entity
-public class Lutador extends StaticObservable implements Serializable {
+public class Lutador extends Observable implements Serializable {
     
     /** Id do lutador no banco de dados - mantido pelo JPA */
     private int id = -1;
@@ -57,6 +57,8 @@ public class Lutador extends StaticObservable implements Serializable {
     
     /** Construtor vazio para o JPA*/
     public Lutador() {
+        // Adicionando este lutador ao hub de objeto observáveis
+        LutadorObserverHub.getInstance().addObservable(this);
     }
     
     /**
@@ -152,7 +154,7 @@ public class Lutador extends StaticObservable implements Serializable {
             LutadorDadoIncorretoException {
         
         if (graduacao == 0) {
-            throw new LutadorDadoIncorretoException("� necesSório informar a " +
+            throw new LutadorDadoIncorretoException("É necesSório informar a " +
                     "Graduação do lutador");
         }
         
@@ -216,14 +218,6 @@ public class Lutador extends StaticObservable implements Serializable {
         if(documento.equals(""))
             throw new LutadorDadoIncorretoException("O documento precisa ser " +
                     "preenchido");
-
-        /*Lutador lutador = DAOFactory.getInstance().getLutadorDAO().getLutadorPorDocumento(documento);
-        
-        // Se o lutador não é null e não é este (this) lutador
-        if((lutador != null) && 
-                (!lutador.getDocumento().equals(this.getDocumento())))
-            throw new LutadorDadoIncorretoException("Já existe um lutador com" +
-                    " este documento");            */
         
         this.documento = documento;
         
@@ -307,8 +301,13 @@ public class Lutador extends StaticObservable implements Serializable {
     public void delete() throws DAOException {
         
         DAOFactory.getInstance().getLutadorDAO().delete(this);
-        
-        Lutador.notifyObservers();        
+
+        // Notificando alteracaoes
+        this.setChanged();
+        this.notifyObservers();
+
+        // Removendo do hub
+        LutadorObserverHub.getInstance().delObservable(this);
         
     }
 
@@ -337,8 +336,10 @@ public class Lutador extends StaticObservable implements Serializable {
         this.setId(id);
         
         DAOFactory.getInstance().getLutadorDAO().update(this);
-        
-        Lutador.notifyObservers();        
+
+        // Notificando observadores
+        this.setChanged();
+        this.notifyObservers();
         
     }
 
@@ -366,18 +367,6 @@ public class Lutador extends StaticObservable implements Serializable {
         
     }
     
-    public static void addLutadorObserver(Observer o){
-        
-        Lutador.addObserver(o);
-        
-    }
-    
-    public static void delLutadorObserver(Observer o){
-        
-        Lutador.deleteObserver(o);
-        
-    }
-
     @ManyToMany(mappedBy = "lutadoresInscritos")
     public List<Campeonato> getCampeonatos() {
         return campeonatos;
