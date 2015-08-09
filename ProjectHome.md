@@ -1,0 +1,1 @@
+Aplicação para administração de campeonatos de TaeKwonDo. Faz a inscrição dos atletas e suas equipes, o chavemaento das lutas de acordo categorias pre-registradas, e contagem de pontos usando qualquer joystick reconhecido pelo MS-Windows
